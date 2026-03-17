@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Kenya & Maasai Mara reserve park</title>
+  <meta name="description" content="Discover wildlife, culture, and adventure in Narok & Maasai Mara. Book your tour today!">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/7e7e5b2e7a.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <button class="dark-toggle" title="Toggle dark mode" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+  <!--
+    Dark toggle button:
+    - Toggles the `dark-mode` class on the <body> to switch colors.
+    - Accessible via aria-label and easy to move to a toolbar if needed.
+  -->
+  <!-- Navigation -->
+  <header>
+    <nav aria-label="Main navigation">
+      <!-- Mobile menu note:
+        - The .menu-toggle button controls the mobile navigation open/close state.
+        - It updates aria-expanded for accessibility and toggles the `open` class on #mainNav.
+        - Styles for the mobile layout are in style.css under the media queries.
+      -->
+      <h1 class="logo">Mara Adventures</h1>
+      <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-links" id="mainNav">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#attractions">Attractions</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#booking">Booking</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="bookings.html">host</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section with Slider -->
+    <section id="home" class="hero-slider" aria-labelledby="hero-title">
+      <div class="hero-slide slide-1 active"></div>
+      <div class="hero-slide slide-2"></div>
+      <div class="hero-slide slide-3"></div>
+      <div class="hero-content">
+        <h2 id="hero-title">Discover the Beauty of Kenya & Maasai Mara</h2>
+        <p>Wildlife • Culture • Adventure</p>
+        <a href="#booking" class="btn">Book a Tour</a>
+      </div>
+      <div class="slider-controls">
+        <span class="slider-dot active"></span>
+        <span class="slider-dot"></span>
+        <span class="slider-dot"></span>
+      </div>
+    </section>
+
+    <!-- Attractions -->
+    <section id="attractions" class="section" aria-labelledby="attractions-title">
+      <h2 id="attractions-title">Top Attractions</h2>
+      <!--
+        Attraction search input:
+        - Filters the cards in .cards by matching card text.
+        - Handled by a JS listener that hides non-matching .card elements.
+      -->
+      <input type="text" id="attractionSearch" placeholder="Search attractions...">
+      <div class="cards">
+        <div class="card fade-in">
+          <img src="lion.jpg" alt="Lion in Maasai Mara" loading="lazy">
+          <h3>Big Five Wildlife</h3>
+          <p>See lions, elephants, buffalo, leopards, and rhinos in their natural habitat.</p>
+        </div>
+        <div class="card fade-in">
+          <img src="masai dancing.jpg" alt="Maasai people dancing" loading="lazy">
+          <h3>Maasai Culture</h3>
+          <p>Experience Maasai traditions, dance, and homestays.</p>
+        </div>
+        <div class="card fade-in">
+          <img src="migration.jpg" alt="Wildebeest Migration at Mara River" loading="lazy">
+          <h3>Wildebeest Migration</h3>
+          <p>Witness the world-famous migration at the Mara River.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="section" aria-labelledby="gallery-title">
+      <h2 id="gallery-title">Photo Gallery</h2>
+      <div class="gallery">
+        <img src="mara1.jpg" alt="Maasai Mara Landscape" loading="lazy">
+        <img src="elephant.jpg" alt="Elephants in Mara" loading="lazy">
+        <img src="masai people.jpg" alt="Maasai People" loading="lazy">
+        <img src="Giffle.jpg" alt="Giraffe in Mara" loading="lazy">
+        <img src="sunset.jpg" alt="Sunset over Mara" loading="lazy">
+        <img src="elephants.jpg" alt="Elephants near the river" loading="lazy">
+      </div>
+    </section>
+
+    <!-- Booking Form -->
+    <section id="booking" class="section" aria-labelledby="booking-title">
+      <h2 id="booking-title">Book Your Tour</h2>
+      <!--
+        Booking form notes:
+        - Fields: name, email, phone, date.
+        - On submit the handler reads these inputs and appends an object to
+          localStorage key "bookings" as JSON. Shape:
+            { name: 'Full Name', email: 'you@example.com', phone: '...', date: 'YYYY-MM-DD' }
+        - The success message is written into #message.
+        - localStorage is used so bookings persist in the browser (no server).
+      -->
+      <form id="bookingForm" autocomplete="on">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Full Name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+        <label for="phone">Phone number</label>
+        <input type="tel" id="phone" name="phone" placeholder="phone number" required>
+
+        <label for="date">Tour Date</label>
+        <input type="date" id="date" name="date" required>
+        <button type="submit" class="btn">Submit</button>
+      </form>
+      <p id="message" aria-live="polite"></p>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section" aria-labelledby="testimonials-title">
+      <h2 id="testimonials-title">Testimonials</h2>
+      <div class="testimonial-cards">
+        <div class="testimonial-card">
+          <span>“The best safari ever! Saw all the Big Five and the guides were amazing.”</span>
+          <span class="author">gideon rana, USA</span>
+        </div>
+        <div class="testimonial-card">
+          <span>“Maasai Mara is breathtaking. The culture and wildlife are unforgettable.”</span>
+          <span class="author">Aisha, Kenya</span>
+        </div>
+        <div class="testimonial-card">
+          <span>“Highly recommend! Booking was easy and the experience was magical.”</span>
+          <span class="author">joshua rana, osero</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Google Maps Embed -->
+    <section id="map" class="section" aria-labelledby="map-title">
+      <h2 id="map-title">Find Us in Maasai Mara</h2>
+      <div class="map-embed">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.770258829413!2d35.14393047404584!3d-1.4061086985930136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f7e9c8e2c7b7b%3A0x7c7e2e2e2e2e2e2e!2sMaasai%20Mara%20National%20Reserve!5e0!3m2!1sen!2ske!4v1694870000000!5m2!1sen!2ske"
+          title="Google Map - Maasai Mara National Reserve"
+          width="90%" height="300" class="map-iframe" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <!-- Contact FOOTER -->
+    <section id="contact" class="section" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact Us</h2>
+      <p>
+        <span class="contact-icons"><i class="fas fa-envelope"></i></span>
+        Email: <a href="mailto:hyperqash1@gmail.com">hyperqash1@gmail.com</a>
+      </p>
+      <p>
+        <span class="contact-icons"><i class="fas fa-phone"></i></span>
+        Phone: <a href="tel:+25493890539">+254 93890539</a>
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Narok Adventures coded by <span class="footer-author">prince lemayian</span>. All rights reserved.</p>
+  </footer>
+
+  <!--
+    NOTE: This block contains the main UI scripts. If you see this page served
+    with <script src="script.js"> plus inline code here, some browsers will
+    ignore the inline code because the script tag specifies a src attribute.
+    Recommended: move this inline code to script.js and use a single
+    <script src="script.js"></script> so behavior is consistent.
+  -->
+  <script src="script.js"></script>
+</body>
+</html>

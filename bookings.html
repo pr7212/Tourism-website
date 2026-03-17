@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin - Bookings</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{font-family:Segoe UI,Arial,Helvetica,sans-serif;padding:18px}
+    .card{background:#fff;padding:18px;border-radius:10px;max-width:900px;margin:16px auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border:1px solid #eee;text-align:left}
+    th{background:#f39c12;color:#fff}
+    .actions{display:flex;gap:8px}
+    .btn{background:#f39c12;color:#fff;border:none;padding:8px 10px;border-radius:6px;cursor:pointer}
+    .danger{background:#e74c3c}
+    .login{max-width:360px;margin:8px auto}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="card login" id="loginCard">
+    <h2>Admin Login</h2>
+    <p>Use username: <strong>admin</strong> and password: <strong>1234</strong></p>
+    <label>Username<input id="u" placeholder="username" style="width:100%;padding:8px;margin-top:6px;border-radius:6px;border:1px solid #ddd"></label>
+    <label>Password<input id="p" type="password" placeholder="password" style="width:100%;padding:8px;margin-top:6px;border-radius:6px;border:1px solid #ddd"></label>
+    <div style="margin-top:10px">
+      <button id="loginBtn" class="btn">Login</button>
+    </div>
+    <p id="loginMsg" style="color:#e74c3c"></p>
+  </div>
+
+  <div class="card hidden" id="adminCard">
+    <h2>Bookings Management</h2>
+    <p>Total bookings: <span id="count">0</span></p>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Email</th><th>Date</th><th>Action</th></tr>
+      </thead>
+      <tbody id="bookingsTable"></tbody>
+    </table>
+    <div style="margin-top:12px;text-align:right">
+      <button id="clearBtn" class="btn danger">Delete All</button>
+      <a href="index.html" class="btn" style="margin-left:8px;text-decoration:none;display:inline-block">Back</a>
+    </div>
+  </div>
+
+  <script>
+    /*
+      Admin page overview (client-side only):
+      - This page provides a simple admin view for bookings stored in localStorage.
+      - Authentication is a simple front-end check (username: admin / password: 1234).
+      - Bookings are stored under localStorage key "bookings" as a JSON array.
+      - UI elements referenced below:
+        - #loginCard : login form
+        - #adminCard : admin panel with bookings table
+        - #bookingsTable : tbody where rows are rendered
+    */
+    const loginBtn = document.getElementById('loginBtn');
+    const loginMsg = document.getElementById('loginMsg');
+    const loginCard = document.getElementById('loginCard');
+    const adminCard = document.getElementById('adminCard');
+
+    // Render bookings from localStorage into the table body.
+    // Each booking is expected to be an object: { name, email, date }
+    // We escape values before inserting them into the DOM to avoid XSS.
+    function renderBookings(){
+      const bookings = JSON.parse(localStorage.getItem('bookings'))||[];
+      const tbody = document.getElementById('bookingsTable');
+      // Clear previous rows
+      tbody.innerHTML='';
+      // Update count display
+      document.getElementById('count').textContent = bookings.length;
+
+      // Create a row for each booking
+      bookings.forEach((b,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${i+1}</td><td>${escapeHtml(b.name)}</td><td>${escapeHtml(b.email)}</td><td>${escapeHtml(b.date)}</td><td><div class="actions"><button class="btn danger" data-i="${i}">Delete</button></div></td>`;
+        tbody.appendChild(tr);
+      });
+
+      // Attach delete handlers to each generated delete button.
+      // We re-read localStorage inside the handler to avoid stale state.
+      tbody.querySelectorAll('button[data-i]').forEach(btn=>btn.addEventListener('click', (e)=>{
+        const i = Number(btn.getAttribute('data-i'));
+        const arr = JSON.parse(localStorage.getItem('bookings'))||[];
+        arr.splice(i,1); // remove item at index i
+        localStorage.setItem('bookings', JSON.stringify(arr));
+        renderBookings(); // refresh UI
+      }));
+    }
+
+    // Escape a string for safe insertion into innerHTML
+    function escapeHtml(s){
+      return String(s||'').replace(/[&<>\"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c] ));
+    }
+
+    // Simple login: only toggles visibility of admin UI.
+    loginBtn.addEventListener('click', ()=>{
+      const u = document.getElementById('u').value.trim();
+      const p = document.getElementById('p').value.trim();
+      if(u==='admin' && p==='1234'){
+        loginCard.classList.add('hidden');
+        adminCard.classList.remove('hidden');
+        renderBookings();
+      } else {
+        loginMsg.textContent = 'Invalid credentials';
+      }
+    });
+
+    // Clear all bookings after a confirmation prompt
+    document.getElementById('clearBtn').addEventListener('click', ()=>{
+      if(confirm('Delete ALL bookings?')){
+        localStorage.removeItem('bookings');
+        renderBookings();
+      }
+    });
+
+    // If you later implement persistent login, you can set sessionStorage['admin']
+    // and this will auto-open the admin panel on page load.
+    if(sessionStorage.getItem('admin')){
+      loginCard.classList.add('hidden');
+      adminCard.classList.remove('hidden');
+      renderBookings();
+    }
+  </script>
+</body>
+</html>
